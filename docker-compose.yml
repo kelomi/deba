@@ -1,7 +1,9 @@
+version: '3.8'
+
 services:
   # MySQL service
   mysql:
-    image: mysql:8.0.43
+    image: mysql:5.7  # Changed from 8.0.43 to 5.7 for memory issues
     container_name: mysql_container
     restart: always
     environment:
@@ -11,21 +13,19 @@ services:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -pedoRor@44"]
-      interval: 10s
-      timeout: 30s
-      retries: 10
-    command: --default-authentication-plugin=mysql_native_password
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
-  # Backend service (Node.js + Express)
+  # Backend service (Node.js + Express) - CHANGED CONTAINER NAME
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     image: kelomi44/backend-app:latest
-    container_name: backend_container
+    container_name: backend  # ← CHANGED from backend_container to backend
     restart: unless-stopped
     ports:
       - "3000:3000"
@@ -38,10 +38,6 @@ services:
       - DB_USER=root
       - DB_PASSWORD=edoRor@44
       - DB_DATABASE=crud_operations
-      - DB_WAITFORCONNECTIONS=true
-      - DB_CONNECTIONLIMIT=10
-      - DB_QUEUELIMIT=0
-      - DB_TABLENAME=users
     volumes:
       - ./backend:/usr/src/app
       - /usr/src/app/node_modules
@@ -58,10 +54,6 @@ services:
       - "5000:80"
     depends_on:
       - backend
-    user: "root"  # ← ADD THIS LINE to fix permission issues
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
 
 volumes:
   mysql_data:
