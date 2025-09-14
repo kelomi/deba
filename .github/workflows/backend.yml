@@ -52,7 +52,7 @@ jobs:
               -e MYSQL_DATABASE=crud_operations \
               -p 3306:3306 \
               -v mysql_data:/var/lib/mysql \
-              mysql:5.7
+              mysql:mysql:8.0.43
             echo "MySQL container created and started"
           else
             echo "MySQL container already running"
