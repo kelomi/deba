@@ -30,7 +30,7 @@ jobs:
         context: ./frontend
         file: ./frontend/Dockerfile
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/frontend-app:latest  # Fixed: Use secret
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/frontend-app:latest
 
     - name: Deploy to EC2
       uses: appleboy/ssh-action@v0.1.10
@@ -48,10 +48,10 @@ jobs:
           
           # Create or update frontend container WITH LINK TO BACKEND
           docker run -d \
-            --name frontend_container \  # Keep consistent name
+            --name frontend_container \
             --restart unless-stopped \
             -p 5000:80 \
-            --link backend:backend \  # ← CRITICAL: Add this link
+            --link backend:backend \
             ${{ secrets.DOCKERHUB_USERNAME }}/frontend-app:latest
           
           # Clean up unused images
