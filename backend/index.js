@@ -11,7 +11,7 @@ const port = process.env.PORT || 3000;
 
 // Middleware - FIXED CORS CONFIGURATION
 app.use(cors({
-  origin: 'http://52.90.249.200:5000', // Your frontend URL
+  origin: 'http://52.90.249.200:3000', // Your frontend URL
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
